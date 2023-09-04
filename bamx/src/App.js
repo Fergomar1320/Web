@@ -1,9 +1,12 @@
+import Registration from "./features/login/components/registration";
+import app from '../src/config/FirebaseConnection';
+import {getAuth} from 'firebase/auth';
+
 function App() {
+  const auth = getAuth(app);
 
   return (
-    <main className="App">
-      <p>TEXTO DE PRUEBA</p>
-    </main>
+    <Registration/>
   );
 }
 
