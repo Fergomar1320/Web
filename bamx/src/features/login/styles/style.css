@@ -1,0 +1,77 @@
+@font-face{
+    font-family: Poppins;
+    src: url(./../../../fonts/Poppins/Poppins-Black.ttf)
+}
+
+.Poppins{
+    font-family: Poppins;
+}
+
+.screen{
+    background: linear-gradient(180deg, #F3B246 0%, #E51824 100%);
+    background-size: cover;
+    background-repeat: no-repeat;
+    height: 100vh;
+    width: 100%;
+}
+*{
+    margin: 0;
+    padding: 0;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    flex-grow: 1;
+    padding: .1em .1em .1em .1em;
+}
+
+.loginText{
+    color: #FFF;
+    text-align: center;
+    font-family: 'Poppins';
+    font-size: 48px;
+}
+
+.welcome {
+    color: #FFF;
+    font-family: Poppins;
+    font-size: 20px;
+    margin: .5em auto;
+    padding: 0 0 0 0;
+}
+
+.feedback {
+    color: rgb(46, 0, 0);
+}
+
+
+.logo{
+    width: 386px;
+    height: 327px;
+    margin: auto;
+    
+}
+
+.container{
+    width: 30em;
+    height: 3em;
+    border-radius: 100px;
+    box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+    margin:auto;
+    padding: 0 0 0 1rem;
+
+}
+
+.button{
+    width: 10em;
+    height: 3em;
+    border-radius: 100px;
+    box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+    margin: 3px auto 
+}
+
+.buttonDiv{
+    margin: auto;
+}
