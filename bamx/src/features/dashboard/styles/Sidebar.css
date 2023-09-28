@@ -1,0 +1,16 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800&display=swap');
+
+body{
+    margin: 0;
+}
+
+.side-bar_profile{
+    text-align: center;
+    margin-top: 10vh;
+}
+
+.name{
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    font-size: 16px;
+}

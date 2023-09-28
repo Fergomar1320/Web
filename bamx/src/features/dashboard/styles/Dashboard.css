@@ -1,0 +1,129 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800&display=swap');
+
+body{
+    background-color: #EFEFEF;
+}
+
+.header{
+    padding: 1%;
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+}
+
+.container{
+    display: flex;
+}
+
+.main{
+    flex: 3;
+}
+
+.side-bar{
+    background-color: #F9F9F9;
+    flex: 1;
+    width: 100%;
+    border-radius: 24px;
+}
+
+/* ---------- HEADER TOP ---------- */
+
+.header-top{
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+.header-top_search{
+    width: 50%;
+    margin-left: 4%;
+    margin-top: 1%;
+}
+
+.search{
+    width: 150%;
+	height: 40px;
+    background-color: #F9F9F9;
+    font-size: 14px;
+	border-radius: 16px;
+    border-width: 0px;
+    filter: drop-shadow(2px 2px 2px rgba(0,0,0,0.3));
+    font-family: 'Poppins', sans-serif;
+    font-weight: 400;
+}
+
+/* ---------- HEADER BOTTOM ---------- */
+
+.header-bottom{
+    display: flex;
+    align-items: center;
+    margin-left: 2.5%;
+}
+
+.header-bottom_tittle{
+    margin-right: 5%;
+    font-size: 24px;
+    font-weight: 800;
+    font-family: 'Poppins', sans-serif;
+}
+
+.header-bottom_buttons{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.btn2,
+.btn3 {
+    margin-left: 5%;
+}
+
+.btn1,
+.btn2,
+.btn3{
+    cursor: pointer;
+    height: 40px;
+    border: 0;
+    border-radius: 21px;
+    font-size: 16px;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+}
+
+.btn1:hover {
+    background-color: rgba(56,181,3,0.3);
+}
+
+.btn2:hover{
+    background-color: rgba(248,156,4,0.3);
+}
+
+.btn3:hover{
+    background-color: rgba(232,4,44,0.3);
+}
+
+
+/* ---------- TABLE ---------- */
+
+.styled-table {
+    width: 82%; 
+    margin-left: 8vh;
+    border-collapse: collapse;
+    font-family: 'Poppins', sans-serif;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+    border-radius: 20px;
+    background-color: #F9F9F9;
+}
+  
+.styled-table thead tr {
+    color: black;
+    text-align: left;
+    border-bottom: 1px solid #000;
+}
+  
+.styled-table th,
+.styled-table td {
+    padding: 12px 15px;
+    font-weight: 600;
+    text-align: center; 
+}
