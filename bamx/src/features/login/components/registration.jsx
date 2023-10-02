@@ -3,19 +3,26 @@ import styles from "../styles/style.module.css";
 
 import app from "../../../config/FirebaseConnection";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import { useNavigate } from "react-router-dom";
 
 const auth = getAuth(app);
 
 const Registration = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [isShown, setIsShown] = useState(false);
+  
+  const togglePassword = () =>{
+    setIsShown((isShown) => !isShown);
+  }
 
   const onLogin = (e) => {
+    //let navigate = useNavigate();
     e.preventDefault();
     signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         const user = userCredential.user;
-        //navigate("/home")
+        //navigate('../../../')
         console.log(user);
       })
       .catch((error) => {
@@ -50,11 +57,21 @@ const Registration = () => {
           <input
             className={styles.container}
             placeholder="Password"
-            type="text"
+            type={isShown ? "text" : "password"}
             id="password"
             autoComplete="false"
             onChange={(e) => setPassword(e.target.value)}
           />
+
+            <div className= {styles.checkboxContainer}>
+                <label htmlFor="checkbox" className={styles.welcome}>Mostrar Constraseña</label>
+                <input
+                    id = "checkbox"
+                    type = "checkbox"
+                    checked = {isShown}
+                    onChange={togglePassword}/>
+                
+            </div>
         </div>
 
         <button className={styles.button} onClick={onLogin}>

@@ -37,9 +37,9 @@ form {
 .welcome {
     color: #FFF;
     font-family: Poppins;
-    font-size: 20px;
+    font-size: 15px;
     margin: .5em auto;
-    padding: 0 0 0 0;
+    padding: 0 .5em 0 1em ;
 }
 
 .feedback {
@@ -74,4 +74,10 @@ form {
 
 .buttonDiv{
     margin: auto;
+}
+
+.checkboxContainer{
+    color: #FFF;
+    font-family: Poppins;
+    
 }
