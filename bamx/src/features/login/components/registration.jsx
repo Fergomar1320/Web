@@ -1,9 +1,11 @@
 import React, { useState } from "react";
 import styles from "../styles/style.module.css";
+import Dashboard from "../../dashboard/views/Dashboard";
 
 import app from "../../../config/FirebaseConnection";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
-import { useNavigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
+
 
 const auth = getAuth(app);
 
@@ -11,19 +13,20 @@ const Registration = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isShown, setIsShown] = useState(false);
+  const navigate = useNavigate();
   
   const togglePassword = () =>{
     setIsShown((isShown) => !isShown);
   }
 
   const onLogin = (e) => {
-    //let navigate = useNavigate();
     e.preventDefault();
     signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         const user = userCredential.user;
-        //navigate('../../../')
         console.log(user);
+        navigate("/dashboard");
+        //return<Dashboard/>
       })
       .catch((error) => {
         const errorCode = error.code;
