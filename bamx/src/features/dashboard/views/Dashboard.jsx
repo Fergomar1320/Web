@@ -2,11 +2,31 @@ import React, { useEffect, useState } from "react";
 import "../styles/Dashboard.css";
 import Header from "../components/Header";
 import Sidebar from "../components/Sidebar";
+import app from "../../../config/FirebaseConnection";
+import {useAuthState} from "react-firebase-hooks/auth";
+import {getAuth, onAuthStateChanged} from "firebase/auth";
+import { Navigate } from "react-router-dom";
 import { db } from "../../../config/FirebaseConnection";
 import { collection, getDocs } from "firebase/firestore";
 
+const auth = getAuth(app);  
+
+
 const Dashboard = () => {
   const [pedidos, setPedidos] = useState([]);
+  const [user] = useAuthState(auth);
+
+  useEffect(() => {
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        // User is signed in
+        const uid = user.uid;
+        console.log(uid);
+      } else {
+        // User is signed out
+      }
+    });
+  }, []);
 
   useEffect(() => {
     const getPedidos = async () => {
@@ -23,7 +43,10 @@ const Dashboard = () => {
     };
     getPedidos();
   }, [pedidos]);
-
+  if (!user) {
+    //redirect to login page
+    return <Navigate replace to = "/login" />
+  } else {
   return (
     <section className="container">
       <section className="main">
@@ -53,6 +76,7 @@ const Dashboard = () => {
       </section>
     </section>
   );
+}
 };
 
 export default Dashboard;
