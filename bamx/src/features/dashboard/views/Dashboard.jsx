@@ -65,7 +65,7 @@ const Dashboard = () => {
                 <td style={{ textAlign: "center" }}>{`${pedido.requestNumber}` + pedido.id.substring(16)}</td>
                 <td style={{ textAlign: "center" }}>{pedido.nameCorp}</td>
                 <td style={{ textAlign: "center" }}>{pedido.status}</td>
-                <td style={{ textAlign: "center" }}>{pedido.createdAt}</td>
+                <td style={{ textAlign: "center" }}>{pedido.creationDate}</td>
               </tr>
             ))}
           </thead>

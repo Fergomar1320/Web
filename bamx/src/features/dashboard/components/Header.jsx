@@ -23,7 +23,7 @@ const Header = () => {
               <Form.Control
                 className="search"
                 onChange={() => setSearch()}
-                placeholder="Buscar por pedido"
+                placeholder="Buscar por ID de pedido"
               />
             </InputGroup>
           </Form>

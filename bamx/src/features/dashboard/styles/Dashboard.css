@@ -114,7 +114,7 @@ body{
 /* ---------- TABLE ---------- */
 
 .styled-table {
-    width: 82%; 
+    width: 85%; 
     margin-left: 3rem;
     border-collapse: collapse;
     font-family: 'Poppins', sans-serif;
@@ -129,9 +129,14 @@ body{
     border-bottom: 1px solid #000;
 }
   
-.styled-table th,
-.styled-table td {
+.styled-table th {
     padding: 12px 15px;
     font-weight: 600;
     text-align: center; 
+}
+
+.styled-table td{
+    padding: 12px 15px;
+    text-align: center; 
+    font-weight: 400;
 }
