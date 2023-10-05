@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "../styles/Dashboard.css";
 import Sidebar from "../components/Sidebar";
+import RegisterAlly from "../components/RegisterAlly";
 import app from "../../../config/FirebaseConnection";
 import Form from "react-bootstrap/Form";
 import InputGroup from "react-bootstrap/InputGroup";
@@ -154,6 +155,10 @@ const Dashboard = () => {
       </section>
       <section className="side-bar">
         <Sidebar></Sidebar>
+      </section>
+      
+      <section>
+        <RegisterAlly />
       </section>
     </section>
   );
