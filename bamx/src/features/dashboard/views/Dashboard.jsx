@@ -42,7 +42,8 @@ const Dashboard = () => {
       }
     };
     getPedidos();
-  }, [pedidos]);
+  }, []);
+  
   if (!user) {
     //redirect to login page
     return <Navigate replace to = "/login" />
