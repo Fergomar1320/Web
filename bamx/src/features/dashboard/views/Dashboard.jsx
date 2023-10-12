@@ -31,10 +31,19 @@ const Dashboard = () => {
   useEffect(() => {
     const getPedidos = async () => {
       try {
-        const querySnapshot = await getDocs(collection(db, "Requests"));
+        const userQuerySnapshot = await getDocs(collection(db, "userData"));
         const docs = [];
-        querySnapshot.forEach((doc) => {
-          docs.push({ ...doc.data(), id: doc.id });
+        userQuerySnapshot.forEach((doc) => {
+          try{
+            const userRef = "userData/"+doc.id;
+            const requestsQuerySnapshot = getDocs(collection(db, userRef))
+            requestsQuerySnapshot.forEach((request) => {
+              console.log("Request: " + request);
+              docs.push({ ...request.data(), id: doc.id, name: doc.data().nameCorp});
+            });
+          } catch (e) {
+            console.log(e.message);
+          }
         });
         setPedidos(docs);
       } catch (error) {
