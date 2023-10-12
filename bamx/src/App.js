@@ -5,7 +5,7 @@ function App() {
 
   return (
     <main className="App">
-        <Registration />
+        <RegisterAlly />
     </main>
   );
 }

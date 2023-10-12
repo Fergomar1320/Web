@@ -5,6 +5,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Dashboard from "./features/dashboard/views/Dashboard";
 import Registration from "./features/login/components/registration";
 import reportWebVitals from './reportWebVitals';
+import RegisterAlly from './features/dashboard/components/RegisterAlly';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
