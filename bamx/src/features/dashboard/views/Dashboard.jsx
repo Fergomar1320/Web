@@ -7,7 +7,7 @@ import {useAuthState} from "react-firebase-hooks/auth";
 import {getAuth, onAuthStateChanged} from "firebase/auth";
 import { Navigate } from "react-router-dom";
 import { db } from "../../../config/FirebaseConnection";
-import { collection, doc, getDocs } from "firebase/firestore";
+import { collection, getDocs } from "firebase/firestore";
 
 const auth = getAuth(app);  
 
@@ -33,21 +33,18 @@ const Dashboard = () => {
       try {
         const userQuerySnapshot = await getDocs(collection(db, "userData"));
         const docs = [];
-        userQuerySnapshot.forEach((doc) => {
+        userQuerySnapshot.forEach(async (doc) => {
           try{
-            const requestsQuerySnapshot = getDocs(collection(db, "userData", doc.id, "requestsHistory"));
+            const requestsQuerySnapshot = await getDocs(collection(db, "userData", doc.id, "requestsHistory"));
             console.log(requestsQuerySnapshot);
-            requestsQuerySnapshot.then(response => {
-              response.forEach((request) => {
-                console.log(request.id)
-                docs.push({ ...request.data(), id: doc.id, name: doc.data().nameCorp});
-              })
-            })
+            requestsQuerySnapshot.forEach((request) => {
+                docs.push({...request.data(), id: request.id, requestNumber: request.data()["requestID"], nameCorp: doc.data()["nameCorp"]});
+                setPedidos(docs);
+            });
           } catch (e) {
             console.log(e.message);
           }
         });
-        setPedidos(docs);
       } catch (error) {
         console.log("Error: ", error);
       }
@@ -73,7 +70,7 @@ const Dashboard = () => {
             </tr>
             {pedidos.map((pedido) => (
               <tr key={pedido.id}>
-                <td style={{ textAlign: "center" }}>{`${pedido.requestNumber}` + pedido.id.substring(16)}</td>
+                <td style={{ textAlign: "center" }}>{`${pedido.requestNumber}` + pedido.id}</td>
                 <td style={{ textAlign: "center" }}>{pedido.nameCorp}</td>
                 <td style={{ textAlign: "center" }}>{pedido.status}</td>
                 <td style={{ textAlign: "center" }}>{pedido.creationDate}</td>
