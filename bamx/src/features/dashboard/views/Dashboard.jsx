@@ -69,7 +69,7 @@ const Dashboard = () => {
               <th style={{ textAlign: "center" }}> Fecha de creación </th>
             </tr>
             {pedidos.map((pedido) => (
-              <tr key={pedido.id}>
+              <tr className="data" key={pedido.id}>
                 <td style={{ textAlign: "center" }}>{`${pedido.requestNumber}` + pedido.id}</td>
                 <td style={{ textAlign: "center" }}>{pedido.nameCorp}</td>
                 <td style={{ textAlign: "center" }}>{pedido.status}</td>

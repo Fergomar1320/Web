@@ -132,11 +132,15 @@ body{
 .styled-table th {
     padding: 12px 15px;
     font-weight: 600;
-    text-align: center; 
+    text-align: center;
 }
 
 .styled-table td{
     padding: 12px 15px;
     text-align: center; 
     font-weight: 400;
+}
+
+.data:hover{
+    background-color: #E1E1E1;
 }
