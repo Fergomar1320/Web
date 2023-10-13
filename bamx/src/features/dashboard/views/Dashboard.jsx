@@ -7,7 +7,7 @@ import {useAuthState} from "react-firebase-hooks/auth";
 import {getAuth, onAuthStateChanged} from "firebase/auth";
 import { Navigate } from "react-router-dom";
 import { db } from "../../../config/FirebaseConnection";
-import { collection, getDocs } from "firebase/firestore";
+import { collection, doc, getDocs } from "firebase/firestore";
 
 const auth = getAuth(app);  
 
@@ -35,12 +35,14 @@ const Dashboard = () => {
         const docs = [];
         userQuerySnapshot.forEach((doc) => {
           try{
-            const userRef = "userData/"+doc.id;
-            const requestsQuerySnapshot = getDocs(collection(db, userRef))
-            requestsQuerySnapshot.forEach((request) => {
-              console.log("Request: " + request);
-              docs.push({ ...request.data(), id: doc.id, name: doc.data().nameCorp});
-            });
+            const requestsQuerySnapshot = getDocs(collection(db, "userData", doc.id, "requestsHistory"));
+            console.log(requestsQuerySnapshot);
+            requestsQuerySnapshot.then(response => {
+              response.forEach((request) => {
+                console.log(request.id)
+                docs.push({ ...request.data(), id: doc.id, name: doc.data().nameCorp});
+              })
+            })
           } catch (e) {
             console.log(e.message);
           }
