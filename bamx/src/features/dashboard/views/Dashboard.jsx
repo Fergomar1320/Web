@@ -62,12 +62,12 @@ const Dashboard = () => {
         <Header></Header>
         <table className="styled-table">
           <thead>
-            <tr>
-              <th style={{ textAlign: "center" }}> Id</th>
-              <th style={{ textAlign: "center" }}> Nombre de la empresa </th>
-              <th style={{ textAlign: "center" }}> Estado del pedido </th>
-              <th style={{ textAlign: "center" }}> Fecha de creación </th>
-            </tr>
+              <tr>
+                <th style={{ textAlign: "center" }}> Id</th>
+                <th style={{ textAlign: "center" }}> Nombre de la empresa </th>
+                <th style={{ textAlign: "center" }}> Estado del pedido </th>
+                <th style={{ textAlign: "center" }}> Fecha de creación </th>
+              </tr>
             {pedidos.map((pedido) => (
               <tr className="data" key={pedido.id}>
                 <td style={{ textAlign: "center" }}>{`${pedido.requestNumber}` + pedido.id}</td>

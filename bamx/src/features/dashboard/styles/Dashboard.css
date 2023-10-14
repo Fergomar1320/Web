@@ -126,13 +126,13 @@ body{
 .styled-table thead tr {
     color: black;
     text-align: left;
-    border-bottom: 1px solid #000;
 }
   
 .styled-table th {
     padding: 12px 15px;
     font-weight: 600;
     text-align: center;
+    border-bottom: 1px  solid #000;
 }
 
 .styled-table td{
