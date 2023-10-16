@@ -5,7 +5,7 @@ function App() {
 
   return (
     <main className="App">
-        <Dashboard />
+        <Registration />
     </main>
   );
 }
