@@ -2,215 +2,175 @@ import React, { useEffect, useState } from "react";
 import app from "../../../config/FirebaseConnection";
 import {useAuthState} from "react-firebase-hooks/auth";
 import {getAuth, onAuthStateChanged} from "firebase/auth";
-import { Navigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { db } from "../../../config/FirebaseConnection";
 
 import {createUserWithEmailAndPassword} from 'firebase/auth';
 import { getFirestore, collection, addDoc } from "firebase/firestore";
-
 const auth = getAuth(app);
 
 const RegisterAlly = () => {
-    const [showForm, setShowForm] = useState(false);
-    const [allyName, setAllyName] = useState('');
-    const [allyEmail, setAllyEmail] = useState('');
-    const [allyCompany, setAllyCompany] = useState('');
-    const [allyPhone, setAllyPhone] = useState('');
-    const [allyPassword, setAllyPassword] = useState('');
-    const [allyConfirmPassword, setAllyConfirmPassword] = useState('');
-    const [allyAddress, setAllyAddress] = useState('');
+  const [isOpen, setIsOpen] = useState(false);
+  const [allyName, setAllyName] = useState('');
+  const [allyEmail, setAllyEmail] = useState('');
+  const [allyCompany, setAllyCompany] = useState('');
+  const [allyPhone, setAllyPhone] = useState('');
+  const [allyPassword, setAllyPassword] = useState('');
+  const [allyConfirmPassword, setAllyConfirmPassword] = useState('');
+  const [allyAddress, setAllyAddress] = useState('');
+  //const navigate = useNavigate();
 
-    const [showAlert, setShowAlert] = useState(false);
-    const [alertMessage, setAlertMessage] = useState('');
-    const [alertTitle, setAlertTitle] = useState('');
+  const Validation = (e) => {
+    var emailRegex = /^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/;
+    var textRegex = /^[a-zA-Z]+(([',.-][a-zA-Z])?[ a-zA-Z]*)*$/;
+    var numRegex = /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/;
+    var passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/;
 
-    const alertTrigger = (title, message) => {
-        setAlertTitle(title);
-        setAlertMessage(message);
-        setShowAlert(!showAlert);
-    };
-
-    const ValidateEmail = async (email) =>{
-        var emailFormat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-        if(email.value.match(emailFormat)){
-            console.log("Valid email!");
-            return true;
-        }else{
-            console.log("Invalid email");
-            return false;
-        }
-
+    if(!textRegex.test(allyName)){
+      //cambiar por alertas
+      console.log("Nombre Invalido");
+      return false;
+    }
+    else{
+      console.log("Nombre Válido:", allyName);
     }
 
-    const validateInputs = async () => {
-        const emailRegex = new RegExp('^[A-Z0-9._%+-]+@[A-Z0-9.-]+[A-Z]{2,4}$')
-        const nameRegex =  new RegExp^("[a-zA-Z]+(([',.-][a-zA-Z])?[ a-zA-Z]*)*$");
-        const passwordRegex = new RegExp ("^(?=.*[a-z])(?=.*[A-Z])(?=.*)[a-zA-Z]{8,}$");
-        const phoneRegex = new RegExp ("^[+]?[(]?[0-9]{3}[)]?[-]?[0-9]{3}[-]?[0-9]{4,6}$");
-    
-        // We start validation
-    
-        // Check if everything is filled
-        if (allyName === '' || allyEmail === '' || allyPassword === '' || allyConfirmPassword === '') {
-          console.log('Campos vacíos', 'Por favor llena todos los campos');
-          return false;
-        }
-        // Check if name is valid
-        if (!nameRegex.test(allyName)) {
-            console.log('Nombre inválido', 'El nombre ingresado no es valido');
-          return false;
-        }
-        // Check if email is valid
-        if (!emailRegex.test(allyEmail)) {
-            console.log('Correo inválido', 'El correo ingresado no es válido');
-          return false;
-        }
-        // Check if phone number is valid
-    
-        if (!phoneRegex.test(allyPhone)) {
-            console.log(
-            'Número de teléfono inválido',
-            'El número de teléfono ignresado no es válido',
-          );
-          return false;
-        }
-    
-        // Check if password is valid
-        if (!passwordRegex.test(allyPassword)) {
-            console.log(
-            'Contraseña inválida',
-            'La contraseña debe tener al menos 8 caracteres, una mayúscula, una minúscula y un número',
-          );
-          return false;
-        }
-        if (allyPassword !== allyConfirmPassword) {
-            console.log('Contraseña inválida', 'Las contraseñas no coinciden');
-          return false;
-        }
-        return true;
-      };
-
-    const toggleForm = () =>{
-        setShowForm(!showForm);
+    if(!emailRegex.test(allyEmail)){
+      console.log("Email inválido");
+      return false;
+    }
+    else{
+      console.log("Email válido:", allyEmail);
     }
 
-    /*const test = (e) => {
-        e.preventDefault();
-    }*/
+    if(!textRegex.test(allyCompany)){
+      console.log("Empresa Inválida");
+    }
+    else{
+      console.log("Empresa válida: ", allyCompany);
+    }
 
-    const handleSignUp = async (e) => {
-        //e.preventDefault();
-        // We start validation
+    if(!textRegex.test(allyAddress)){
+      console.log("Dirección Inválida");
+      return false;
+    }
+    else{
+      console.log("Dirección válida: ", allyAddress);
+    }
 
-        if (ValidateEmail(allyEmail)) {
-        // If everything is valid, we proceed to create the user
-        /*createUserWithEmailAndPassword(auth, allyEmail, allyPassword)
-            .then(userCredential => {
-            // Creating user data in firestore
-            console.log('User created: ' + userCredential.user.uid);
+    if(!numRegex.test(allyPhone)){
+      console.log("Teléfono Inválido");
+      return false;
+    }
+    else{
+      console.log("Teléfono válido: ", allyPhone);
+    }
 
-            addDoc(collection(db, "userData"), {
-                name: allyName,
-                nameCorp: allyCompany,
-                address: allyAddress,
-                phoneNumber: Number(allyPhone),
-                status: Boolean(false),
-            })
+    if(!passwordRegex.test(allyPassword)){
+      console.log("Contraseña Inválida");
+      return false;
+    }
 
-                .then(() => {
-                // Sending email verification to the user
-                console.log('User data added');
-                })
-                .catch(error => {
-                console.log('Error adding user data to firestore: ', error);
-                });
-            })
-            .catch(error => {
-            console.log('Error creating user: ', error);
-            });*/
-            console.log(validateInputs());
-            console.log("Success!");
-        }
-    };
-          
-        return(
-            <section>
-                <button onClick={toggleForm}>
-                    Registrar Nuevo Aliado
-                </button>
-                {showForm && (
-                    <form onSubmit={handleSignUp()}>
-                        <label>
-                            Nombre del Aliado
-                            <input 
-                                type="text" 
-                                name = "allyName" 
-                                value={allyName}
-                                onChange={e => setAllyName(e.target.value)}>
-                            </input>
-                        </label>
-                        <label>
-                            Correo elctrónico
-                            <input 
-                                type="text" 
-                                name = "allyEmail" 
-                                value={allyEmail}
-                                onChange={e => setAllyEmail(e.target.value)}>
-                            </input>
-                        </label>
-                        <label>
-                            Empresa
-                            <input 
-                                type="text" 
-                                name = "allyCompany" 
-                                value={allyCompany}
-                                onChange={e => setAllyCompany(e.target.value)}>
-                            </input>
-                        </label>
-                        <label>
-                            Teléfono
-                            <input 
-                                type="number" 
-                                name = "allyPhone" 
-                                value={allyPhone}
-                                onChange={e => setAllyPhone(e.target.value)}>
-                            </input>
-                        </label>
-                        <label>
-                            Dirección
-                            <input 
-                                type="text" 
-                                name = "allyAddress" 
-                                value={allyAddress}
-                                onChange={e => setAllyAddress(e.target.value)}>
-                            </input>
-                        </label>
-                        <label>
-                            Contraseña
-                            <input 
-                                type="text" 
-                                name = "allyPassword" 
-                                value={allyPassword}
-                                onChange={e => setAllyPassword(e.target.value)}>
-                            </input>
-                        </label>
-                        <label>
-                            Confirmar contraseña
-                            <input 
-                                type="text" 
-                                name = "allyConfirmPassword" 
-                                value={allyConfirmPassword}
-                                onChange={e => setAllyConfirmPassword(e.target.value)}>
-                            </input>
-                        </label>
-                        <button>
-                            Confirmar
-                        </button>
-                    </form>
-                )}
-            </section>
-        );
-    
+    if(!passwordRegex.test(allyConfirmPassword)){
+      console.log("Confirmación Inválida");
+      return false;
+    }
+
+    if(allyPassword !== allyConfirmPassword){
+      console.log("Las contraseñas no coinciden!");
+    }
+
+    return true;
+  }
+
+  const handleSignup = () => {
+    //CAMBIAR ESTO POR IMPLEMENTACIÓN EN FIREBASE
+    if(Validation()){
+      console.log("User created successfully!");
+      return true;
+    }
+    else{
+      console.log("Failed to register a new ally!");
+      return true;
+    }
+  }
+
+  return (
+    <>
+      <div>
+        <div>
+          <button>Individual</button>
+          <button>Empresa</button>
+        </div>
+        <form>
+          <label>
+              Nombre del Aliado
+              <input 
+                type="text" 
+                name = "allyName" 
+                value={allyName} 
+                onChange={(e) => setAllyName(e.target.value)}>
+              </input>
+          </label>
+          <label>
+              Correo elctrónico
+              <input 
+                type="text" 
+                name = "allyEmail" 
+                value={allyEmail}
+                onChange={(e) => setAllyEmail(e.target.value)}>
+              </input>
+          </label>
+          <label>
+              Empresa
+              <input 
+                type="text" 
+                name = "allyCompany" 
+                value={allyCompany}
+                onChange={(e) => setAllyCompany(e.target.value)}>
+              </input>
+          </label>
+          <label>
+              Dirección de la Empresa
+              <input 
+                type="text" 
+                name = "allyAddress" 
+                value={allyAddress}
+                onChange={(e) => setAllyAddress(e.target.value)}>
+              </input>
+          </label>
+          <label>
+              Teléfono
+              <input 
+                type="text" 
+                name = "allyPhone" 
+                value={allyPhone}
+                onChange={(e) => setAllyPhone(e.target.value)}>
+              </input>
+          </label>
+          <label>
+              Contraseña
+              <input 
+                type="text" 
+                name = "allyPassword" 
+                value={allyPassword}
+                onChange={(e) => setAllyPassword(e.target.value)}>
+              </input>
+          </label>
+          <label>
+              Confirmar contraseña
+              <input 
+                type="text" 
+                name = "allyConfirmPassword" 
+                value={allyConfirmPassword}
+                onChange={(e) => setAllyConfirmPassword(e.target.value)}>
+              </input>
+          </label>
+        </form>
+        <button onClick={handleSignup}>Registrar</button>
+      </div>
+    </>
+  )
 };
 
 export default RegisterAlly;

@@ -15,9 +15,11 @@ root.render(
         <Route index element = {<App />} />
         <Route path="login" element = {<Registration />} />
         <Route path="dashboard" element = {<Dashboard />} />
+        <Route path="register-ally" element = {<RegisterAlly />}></Route>
       </Routes>
     </BrowserRouter>
-  </React.StrictMode>
+  </React.StrictMode>,
+  document.getElementById('root')
 );
 
 // If you want to start measuring performance in your app, pass a function

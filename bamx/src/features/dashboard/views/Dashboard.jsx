@@ -17,6 +17,7 @@ import {
 const auth = getAuth(app);
 
 const Dashboard = () => {
+  const navigate = useNavigate();  
   const [pedidos, setPedidos] = useState([]);
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState(null); // Estado de filtrado
@@ -157,8 +158,8 @@ const Dashboard = () => {
         <Sidebar></Sidebar>
       </section>
       
-      <section>
-        <RegisterAlly />
+      <section className="register-ally">
+        <button onClick={() => {navigate("/register-ally")}}>Registrar Nuevo Aliado</button>
       </section>
     </section>
   );
