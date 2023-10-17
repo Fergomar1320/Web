@@ -41,7 +41,7 @@ body{
 }
 
 .search{
-    width: 150%;
+    width: 89%;
 	height: 40px;
     background-color: #F9F9F9;
     font-size: 14px;
@@ -80,13 +80,15 @@ body{
 }
 
 .btn2,
-.btn3 {
-    margin-left: 2rem
+.btn3,
+.btn4 {
+    margin-left: 1rem
 }
 
 .btn1,
 .btn2,
-.btn3{
+.btn3,
+.btn4{
     cursor: pointer;
     height: 40px;
     border: 0;
@@ -110,6 +112,9 @@ body{
     background-color: rgba(232,4,44,0.3);
 }
 
+.btn4:hover{
+    background-color: rgba(0, 19, 195, 0.3);
+}
 
 /* ---------- TABLE ---------- */
 
