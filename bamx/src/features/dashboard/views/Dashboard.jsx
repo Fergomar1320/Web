@@ -41,7 +41,7 @@ const Dashboard = () => {
           snapshot.forEach((doc) => {
             const requestsQuerySnapshot = query(
               collection(db, "userData", doc.id, "requestsHistory"),
-              limit(50) // Limitar a 50 solicitudes
+              limit(50)
             );
             onSnapshot(requestsQuerySnapshot, (snapshot2) => {
               snapshot2.docChanges().forEach((change) => {
@@ -74,6 +74,8 @@ const Dashboard = () => {
     ? filteredPedidos.filter((pedido) => pedido.status === filter)
     : filteredPedidos;
 
+  const firstElevenPedidos = filteredPedidosByStatus.slice(0, 11);
+
   return (
     <section className="container">
       <section className="main">
@@ -102,10 +104,10 @@ const Dashboard = () => {
             <section className="header-bottom_navbar">
               <section className="header-bottom_buttons">
                 <button
-                  className={`btn1 ${filter === "Aceptado" ? "active" : ""}`}
-                  onClick={() => setFilter("Aceptado")}
+                  className={`btn1 ${filter === "Entregado" ? "active" : ""}`}
+                  onClick={() => setFilter("Entregado")}
                 >
-                  Aceptado
+                  Entregado
                 </button>
                 <button
                   className={`btn2 ${filter === "Pendiente" ? "active" : ""}`}
@@ -139,7 +141,7 @@ const Dashboard = () => {
             </tr>
           </thead>
           <tbody>
-            {filteredPedidosByStatus.map((pedido) => (
+            {firstElevenPedidos.map((pedido) => (
               <tr className="data" key={pedido.id}>
                 <td style={{ textAlign: "center" }}>{`${pedido.id}`}</td>
                 <td style={{ textAlign: "center" }}>{pedido.nameCorp}</td>
