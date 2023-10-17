@@ -7,7 +7,23 @@ import { db } from "../../../config/FirebaseConnection";
 
 import {createUserWithEmailAndPassword} from 'firebase/auth';
 import { getFirestore, collection, addDoc } from "firebase/firestore";
-const auth = getAuth(app);
+
+import { Resend } from 'resend';
+import { MailSlurp } from 'mailslurp-client';
+const crossFetch = require('cross-fetch');
+
+const mailslurp = new MailSlurp({
+  fetchApi: crossFetch,
+  apiKey: "2133d9fb6974dcba88aa115b66164853c032c42a1ec576d95b874d3b7b1fb8da",
+});
+
+
+//const resend = new Resend('re_DwF9Gw82_LdyBE2x4dddt8jbjFZZjyq1q');
+//const auth = getAuth(app);
+
+//const mailslurp = new MailSlurp({ apiKey: "2133d9fb6974dcba88aa115b66164853c032c42a1ec576d95b874d3b7b1fb8da" });
+//const inbox = await mailslurp.inboxController.createInboxWithDefaults();
+
 
 const RegisterAlly = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -21,7 +37,9 @@ const RegisterAlly = () => {
   const [allyType, setAllyType] = useState(false);
   const navigate = useNavigate();
 
-  const generatePassword = () => { 
+
+
+  const generatePassword = async (setPassword) => { 
     let charset = "!@#$%^&*0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"; 
     let newPassword = ""; 
 
@@ -30,8 +48,27 @@ const RegisterAlly = () => {
             Math.floor(Math.random() * charset.length) 
         ); 
     } 
+    setPassword(newPassword);
 
-    setAllyPassword(newPassword); 
+    try{
+      const inbox = await mailslurp.createInbox();
+      const options = {
+        to: [allyEmail],
+        subject: 'Bienvenid@ a BAMX, ' +allyName,
+        body: 'Tu contraseña para acceder a BAMX: ' + newPassword,
+      };
+      const sent = await mailslurp.sendEmail(inbox.id, options);
+      if (sent) {
+        console.log("email sent successfully!");
+        return true;
+      } else {
+        console.log("Failed to send email!");
+        return false;
+      }
+    }catch(error){
+      console.error("Error in handleSignup: ", error);
+      return false;
+    }
   }; 
 
   const Validation = (e) => {
@@ -86,20 +123,24 @@ const RegisterAlly = () => {
     return true;
   }
 
-  const handleSignup = () => {
-    //CAMBIAR ESTO POR IMPLEMENTACIÓN EN FIREBASE
-    // MANDAR CONTRA POR CORREO
-    if(Validation()){
-      generatePassword();
-      console.log("password: "+allyPassword)
-      console.log("User created successfully!");
-      return true;
-    }
-    else{
-      console.log("Failed to register a new ally!");
-      return true;
+  useEffect(() => {
+    console.log("password: " + allyPassword);
+  }, [allyPassword]); // This hook will run whenever `allyPassword` changes
+
+  const handleSignup = async () => {
+    try {
+      if(Validation()){
+        generatePassword(setAllyPassword);
+      } else {
+        console.log("Failed to register a new ally!");
+        return true;
+      }
+    } catch (error) {
+      console.error("Error in handleSignup: ", error);
+      return false;
     }
   }
+  
 
   const individualAlly = () => {
     setAllyType(true);
