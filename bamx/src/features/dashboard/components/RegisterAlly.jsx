@@ -1,45 +1,37 @@
+// Base
 import React, { useEffect, useState } from "react";
-import app from "../../../config/FirebaseConnection";
-import {useAuthState} from "react-firebase-hooks/auth";
-import {getAuth, onAuthStateChanged} from "firebase/auth";
-import { useNavigate } from "react-router-dom";
-import { db } from "../../../config/FirebaseConnection";
 
+// Firebase
+import { db, auth } from "../../../config/FirebaseConnection";
 import {createUserWithEmailAndPassword} from 'firebase/auth';
-import { getFirestore, collection, addDoc } from "firebase/firestore";
+import { collection, addDoc } from "firebase/firestore";
 
-import { Resend } from 'resend';
+// Styles
+import styles from "../styles/Register.module.css";
+
+// Others
+import { useNavigate } from "react-router-dom";
 import { MailSlurp } from 'mailslurp-client';
+
 const crossFetch = require('cross-fetch');
 
 const mailslurp = new MailSlurp({
   fetchApi: crossFetch,
-  apiKey: "2133d9fb6974dcba88aa115b66164853c032c42a1ec576d95b874d3b7b1fb8da",
+  apiKey: "dc2e43a4f5f1ca12f5fb1ac438e739575f650a708ed381f789cd3af88aa0f3e0",
 });
 
 
-//const resend = new Resend('re_DwF9Gw82_LdyBE2x4dddt8jbjFZZjyq1q');
-//const auth = getAuth(app);
-
-//const mailslurp = new MailSlurp({ apiKey: "2133d9fb6974dcba88aa115b66164853c032c42a1ec576d95b874d3b7b1fb8da" });
-//const inbox = await mailslurp.inboxController.createInboxWithDefaults();
-
-
 const RegisterAlly = () => {
-  const [isOpen, setIsOpen] = useState(false);
   const [allyName, setAllyName] = useState('');
   const [allyEmail, setAllyEmail] = useState('');
   const [allyCompany, setAllyCompany] = useState('');
   const [allyPhone, setAllyPhone] = useState('');
-  const [allyPassword, setAllyPassword] = useState('');
-  const [allyConfirmPassword, setAllyConfirmPassword] = useState('');
   const [allyAddress, setAllyAddress] = useState('');
   const [allyType, setAllyType] = useState(false);
+
   const navigate = useNavigate();
-
-
-
-  const generatePassword = async (setPassword) => { 
+  
+  const generatePassword = async () => { 
     let charset = "!@#$%^&*0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"; 
     let newPassword = ""; 
 
@@ -48,8 +40,21 @@ const RegisterAlly = () => {
             Math.floor(Math.random() * charset.length) 
         ); 
     } 
-    setPassword(newPassword);
+    return newPassword;
+  };
+  
+  const addUser = async (user) => {
+    try{
+      const docRef = await addDoc(collection(db, "userData"), user);
+      console.log("Document written with ID: ", docRef.id);
+    } catch (error) {
+      console.error("Error adding document: ", error);
+    }
+  };
 
+
+  const sendMail = async (newPassword)  => {
+    
     try{
       const inbox = await mailslurp.createInbox();
       const options = {
@@ -60,7 +65,6 @@ const RegisterAlly = () => {
       const sent = await mailslurp.sendEmail(inbox.id, options);
       if (sent) {
         console.log("email sent successfully!");
-        return true;
       } else {
         console.log("Failed to send email!");
         return false;
@@ -69,29 +73,23 @@ const RegisterAlly = () => {
       console.error("Error in handleSignup: ", error);
       return false;
     }
-  }; 
+  }
 
   const Validation = (e) => {
-    var emailRegex = /^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/;
-    var textRegex = /^[a-zA-Z]+(([',.-][a-zA-Z])?[ a-zA-Z]*)*$/;
+    var emailRegex = /^[a-z0-9!#$%&'+/=?^_`{|}~-]+(?:[a-z0-9!#$%&'+/=?^_`{|}~-]+)@(?:[a-z0-9](?:[a-z0-9-][a-z0-9])?)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/;
+    var textRegex = /^[a-zA-Z]+(([',.-][a-zA-Z])?[ a-zA-Z])$/;
+    var addressRegex = /^[a-zA-Z]+(([',.-][a-zA-Z])?[ a-zA-Z#0-9,])*$/;
     var numRegex = /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/;
-    var passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/;
 
     if(!textRegex.test(allyName)){
       //cambiar por alertas
       console.log("Nombre Invalido");
       return false;
     }
-    else{
-      console.log("Nombre Válido:", allyName);
-    }
 
     if(!emailRegex.test(allyEmail)){
       console.log("Email inválido");
       return false;
-    }
-    else{
-      console.log("Email válido:", allyEmail);
     }
 
     if(!allyType){
@@ -99,45 +97,45 @@ const RegisterAlly = () => {
         console.log("Empresa Inválida");
         return false;
       }
-      else{
-        console.log("Empresa válida: ", allyCompany);
-      }
-      if(!textRegex.test(allyAddress)){
+
+      if(!addressRegex.test(allyAddress)){
         console.log("Dirección Inválida");
         return false;
       }
-      else{
-        console.log("Dirección válida: ", allyAddress);
-      }
-    }
 
+    }
 
     if(!numRegex.test(allyPhone)){
       console.log("Teléfono Inválido");
       return false;
     }
-    else{
-      console.log("Teléfono válido: ", allyPhone);
-    }
 
     return true;
   }
 
-  useEffect(() => {
-    console.log("password: " + allyPassword);
-  }, [allyPassword]); // This hook will run whenever `allyPassword` changes
-
   const handleSignup = async () => {
     try {
       if(Validation()){
-        generatePassword(setAllyPassword);
-      } else {
-        console.log("Failed to register a new ally!");
-        return true;
+        const allyPass = await generatePassword()
+        const userCredential = await createUserWithEmailAndPassword(auth, allyEmail, allyPass)
+        .then(() => {
+          const user = {
+            name : allyName,
+            address : allyAddress,
+            nameCorp : allyCompany,
+            phoneNumber: allyPhone,
+            role: 'Ally',
+            status: Boolean(true)
+          };
+          addUser(user);
+          sendMail(allyPass)
+        })
+        .catch((error) => {
+          console.log(error, "Failed to register a new ally!");
+        });
       }
     } catch (error) {
       console.error("Error in handleSignup: ", error);
-      return false;
     }
   }
   
@@ -150,112 +148,97 @@ const RegisterAlly = () => {
     setAllyType(false);
   }
 
-  if(!allyType){
     return (
       <>
+        <section className={styles.screen}>
         <div>
-          <div>
-            <button onClick={individualAlly}>Individual</button>
-            <button onClick={organizationAlly}>Empresa</button>
+          <div className={styles.logo}>
+            <img
+              width={"100%"}
+              src="https://firebasestorage.googleapis.com/v0/b/bamx-cc64f.appspot.com/o/Mobile%2Fassets%2Fsign_up%2Fbamx_logo.png?alt=media&token=bb2f494f-d3dc-41bc-87f7-b677e0e966d7"
+              alt="BAMX logo"
+            />
           </div>
-          
+          <div className={styles.registerButtons}>
+            <button className={styles.roleButtons} onClick={individualAlly} style={{backgroundColor: allyType ? 'rgba(56,181,3,0.3)' : '#fff', borderBottomWidth: allyType ? '4px' : '0px' }}>Individual</button>
+            <button className={styles.roleButtons} onClick={organizationAlly} style={{backgroundColor: allyType ? '#fff' : 'rgba(56,181,3,0.3)', borderBottomWidth: allyType ? '0px' : '4px' }}>Empresa</button>
+          </div>
           <form>
-            <label>
-                Nombre del Aliado
-                <input 
-                  type="text" 
-                  name = "allyName" 
-                  value={allyName} 
-                  onChange={(e) => setAllyName(e.target.value)}>
-                </input>
-            </label>
-            <label>
-                Correo electrónico
-                <input 
-                  type="text" 
-                  name = "allyEmail" 
-                  value={allyEmail}
-                  onChange={(e) => setAllyEmail(e.target.value)}>
-                </input>
-            </label>
-            <label>
-                Empresa
-                <input 
-                  type="text" 
-                  name = "allyCompany" 
-                  value={allyCompany}
-                  onChange={(e) => setAllyCompany(e.target.value)}>
-                </input>
-            </label>
-            <label>
-                Dirección de la Empresa
-                <input 
-                  type="text" 
-                  name = "allyAddress" 
-                  value={allyAddress}
-                  onChange={(e) => setAllyAddress(e.target.value)}>
-                </input>
-            </label>
-            <label>
-                Teléfono
-                <input 
-                  type="text" 
-                  name = "allyPhone" 
-                  value={allyPhone}
-                  onChange={(e) => setAllyPhone(e.target.value)}>
-                </input>
-            </label>
+            <div className={styles.formStyle}>
+              <div className={styles.formLabel}>
+                <label>
+                    <input 
+                      className={styles.inputStyle}
+                      placeholder="Nombre del Aliado"
+                      type="text" 
+                      name = "allyName" 
+                      value={allyName} 
+                      onChange={(e) => setAllyName(e.target.value)}>
+                    </input>
+                </label>
+              </div>
+              <div className={styles.formLabel}>
+                <label>
+                    <input
+                      className={styles.inputStyle}
+                      placeholder="Correo electrónico" 
+                      type="text" 
+                      name = "allyEmail" 
+                      value={allyEmail}
+                      onChange={(e) => setAllyEmail(e.target.value)}>
+                    </input>
+                </label>
+              </div>
+              { !allyType && 
+                  <div className={styles.formLabel}>
+                    <label>
+                        <input 
+                          className={styles.inputStyle}
+                          placeholder="Empresa"
+                          type="text" 
+                          name = "allyCompany" 
+                          value={allyCompany}
+                          onChange={(e) => setAllyCompany(e.target.value)}>
+                        </input>
+                    </label>
+                  </div>
+              }
+              { !allyType && 
+                <div className={styles.formLabel}>
+                  <label>
+                      <input 
+                        className={styles.inputStyle}
+                        placeholder="Dirección de la Empresa"
+                        type="text" 
+                        name = "allyAddress" 
+                        value={allyAddress}
+                        onChange={(e) => setAllyAddress(e.target.value)}>
+                      </input>
+                  </label>
+                </div>
+              }
+              <div className={styles.formLabel}>
+                <label>
+                    <input
+                      className={styles.inputStyle}
+                      placeholder="Teléfono" 
+                      type="text" 
+                      name = "allyPhone" 
+                      value={allyPhone}
+                      onChange={(e) => setAllyPhone(e.target.value)}>
+                    </input>
+                </label>
+              </div>
+            </div>
           </form>
-          <button onClick={handleSignup}>Registrar</button>
-          <button onClick={() => {navigate("/dashboard")}}>Cancelar</button>
+          <div className={styles.newAllyContainer}>
+            <button className={styles.newAllyButtons} onClick={handleSignup}>Registrar</button>
+            <button className={styles.newAllyButtons} onClick={() => {navigate("/dashboard")}}>Cancelar</button>
+          </div>
         </div>
+        </section>
       </>
     )
   }
-  else{
-    return(
-      <>
-        <div>
-          <div>
-            <button onClick={individualAlly}>Individual</button>
-            <button onClick={organizationAlly}>Empresa</button>
-          </div>
-          
-          <form>
-            <label>
-                Nombre del Aliado
-                <input 
-                  type="text" 
-                  name = "allyName" 
-                  value={allyName} 
-                  onChange={(e) => setAllyName(e.target.value)}>
-                </input>
-            </label>
-            <label>
-                Correo elctrónico
-                <input 
-                  type="text" 
-                  name = "allyEmail" 
-                  value={allyEmail}
-                  onChange={(e) => setAllyEmail(e.target.value)}>
-                </input>
-            </label>
-            <label>
-                Teléfono
-                <input 
-                  type="text" 
-                  name = "allyPhone" 
-                  value={allyPhone}
-                  onChange={(e) => setAllyPhone(e.target.value)}>
-                </input>
-            </label>
-          </form>
-          <button onClick={handleSignup}>Registrar</button>
-          <button onClick={() => {navigate("/dashboard")}}>Cancelar</button>
-        </div>
-      </>
-    )
-  }
-};
 
 export default RegisterAlly;
