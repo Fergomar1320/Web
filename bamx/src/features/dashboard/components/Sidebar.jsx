@@ -1,10 +1,14 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import "../styles/Sidebar.css";
+import { auth } from "../../../config/FirebaseConnection";
 
-const Sidebar = ({signOut, notifications}) => {
 
-  console.log("notificaciones", notifications)
+const Sidebar = ({ notifications }) => {
+  const navigate = useNavigate();
 
+
+  console.log("notificaciones", notifications);
 
   return (
     <section className="side-bar_profile">
@@ -20,10 +24,39 @@ const Sidebar = ({signOut, notifications}) => {
           <div>{"Diego"}</div>
           <div>{"Fernández"}</div>
         </div>
-        <div style={{ marginTop: 40, backgroundColor: '#E1E1E1', height: 400, marginInline: 40, borderRadius: 24 }}>
+        <section>
+          <button
+           className="register-ally"
+            onClick={() => {
+              navigate("/register-ally");
+            }}
+          >
+            Registrar Nuevo Aliado
+          </button>
+        </section>
+        <div
+          style={{
+            marginTop: 40,
+            backgroundColor: "#E1E1E1",
+            height: 400,
+            marginInline: 40,
+            borderRadius: 24,
+          }}
+        >
           <div></div>
         </div>
-        <button onClick={signOut} className="btn btn-danger" style={{ marginBlock: 40, backgroundColor: 'transparent', borderWidth: 0, fontFamily: 'Poppins', fontSize: 24, fontWeight: 'regular' }}>
+        <button
+          onClick={() => {auth.signOut(); navigate("/");}}
+          className="btn btn-danger"
+          style={{
+            marginBlock: 40,
+            backgroundColor: "transparent",
+            borderWidth: 0,
+            fontFamily: "Poppins",
+            fontSize: 24,
+            fontWeight: "regular",
+          }}
+        >
           Salir
         </button>
       </div>

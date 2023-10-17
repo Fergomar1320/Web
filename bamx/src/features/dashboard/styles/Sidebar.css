@@ -16,3 +16,23 @@ body{
     font-size: 16px;
     margin-top: 2rem;
 }
+
+.register-ally{
+    background-color: gray;
+    padding: 16px;
+    cursor: pointer;
+    color: white;
+    margin-top: 24px;
+    border-radius: 24px;
+    border-width: 0;
+}
+
+.register-ally:hover{
+    background-color: rgb(141, 141, 141);
+    padding: 16px;
+    cursor: pointer;
+    color: white;
+    margin-top: 24px;
+    border-radius: 24px;
+    border-width: 0;
+}

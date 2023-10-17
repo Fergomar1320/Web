@@ -16,7 +16,6 @@ import {
 const auth = getAuth(app);
 
 const Dashboard = () => {
-  const navigate = useNavigate();  
   const [pedidos, setPedidos] = useState([]);
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState(null); // Estado de filtrado
@@ -26,7 +25,6 @@ const Dashboard = () => {
       if (user) {
         // User is signed in
         const uid = user.uid;
-        console.log(uid);
       } else {
         // User is signed out
       }
@@ -155,10 +153,6 @@ const Dashboard = () => {
       </section>
       <section className="side-bar">
         <Sidebar></Sidebar>
-      </section>
-      
-      <section className="register-ally">
-        <button onClick={() => {navigate("/register-ally")}}>Registrar Nuevo Aliado</button>
       </section>
     </section>
   );
