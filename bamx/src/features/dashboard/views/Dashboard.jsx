@@ -39,11 +39,14 @@ const Dashboard = () => {
     setAlertContent(content);
     setShowAlert(true);
 }
+  const [isFilterActive, setIsFilterActive] = useState(false); // Estado de alternancia
 
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
       if (user) {
         // User is signed in
+        const uid = user.uid;
+        console.log(uid);
       } else {
         // User is signed out
       }
@@ -57,6 +60,8 @@ const Dashboard = () => {
         const docs = [];
         const unsubscribe = onSnapshot(userQuerySnapshot, (snapshot) => {
           snapshot.forEach((doc) => {
+            const estadoFiltrado = filter ? filter.toLowerCase() : filter;
+
             const requestsQuerySnapshot = query(
               collection(db, "userData", doc.id, "requestsHistory"),
               limit(50)
@@ -81,14 +86,14 @@ const Dashboard = () => {
       }
     };
     getPedidos();
-  }, []);
+  }, [filter]);
 
   const filteredPedidos = pedidos.filter((pedido) =>
     pedido.id.toLowerCase().includes(search.toLowerCase())
   );
 
-  // Aplicar el filtro
-  const filteredPedidosByStatus = filter
+  // Aplicar el filtro si está activo
+  const filteredPedidosByStatus = isFilterActive
     ? filteredPedidos.filter((pedido) => pedido.status === filter)
     : filteredPedidos;
 
@@ -146,25 +151,25 @@ const Dashboard = () => {
               <section className="header-bottom_buttons">
                 <button
                   className={`btn1 ${filter === "Entregado" ? "active" : ""}`}
-                  onClick={() => setFilter("Entregado")}
+                  onClick={() => toggleFilter("Entregado")}
                 >
                   Entregado
                 </button>
                 <button
                   className={`btn2 ${filter === "Pendiente" ? "active" : ""}`}
-                  onClick={() => setFilter("Pendiente")}
+                  onClick={() => toggleFilter("Pendiente")}
                 >
                   Pendientes
                 </button>
                 <button
                   className={`btn3 ${filter === "Cancelado" ? "active" : ""}`}
-                  onClick={() => setFilter("Cancelado")}
+                  onClick={() => toggleFilter("Cancelado")}
                 >
                   Cancelado
                 </button>
                 <button
                   className={`btn4 ${filter === "En camino" ? "active" : ""}`}
-                  onClick={() => setFilter("En camino")}
+                  onClick={() => toggleFilter("En camino")}
                 >
                   En camino
                 </button>
@@ -198,6 +203,18 @@ const Dashboard = () => {
       </section>
     </section>
   );
+
+  function toggleFilter(selectedFilter) {
+    if (filter === selectedFilter && isFilterActive) {
+      // Si el filtro seleccionado ya está activo, desactívalo
+      setFilter(null);
+      setIsFilterActive(false);
+    } else {
+      // Si se selecciona un filtro nuevo, actívalo
+      setFilter(selectedFilter);
+      setIsFilterActive(true);
+    }
+  }
 };
 
 export default Dashboard;
