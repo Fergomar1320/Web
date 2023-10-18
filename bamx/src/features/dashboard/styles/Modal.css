@@ -23,4 +23,10 @@ h2{
     font-family: 'Poppins', sans-serif;
     padding-left: 1rem;
     padding-right: 1rem;
+    background-color: rgba(232,4,44);
+    color: white;
+}
+
+.btn-modal:hover{
+    background-color: #F5721A;
 }

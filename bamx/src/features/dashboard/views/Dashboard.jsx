@@ -245,10 +245,9 @@ const Dashboard = () => {
           content: {
             position: "",
             margin: "12.5% 25%",
-            border: "0",
             background: "rgba(255, 255, 255)",
             WebkitOverflowScrolling: "touch",
-            borderRadius: "4px",
+            borderRadius: "20px",
             outline: "none",
             padding: "20px",
             overflow: "hidden",
@@ -258,11 +257,14 @@ const Dashboard = () => {
         {selectedPedido && (
           <div>
             <h2>Detalles del Pedido: {selectedPedido.id}</h2>
-            <p className="tittle-name"> Nombre del cliente: {selectedPedido.name}</p>
+            <p className="tittle-name">
+              {" "}
+              Nombre del cliente: {selectedPedido.name}
+            </p>
             <p className="tittle-phone"> Contacto: {selectedPedido.phone}</p>
-            <p className="tittle-cargo"> {`Contenido del cargamento: ${selectedPedido.productName}`} </p>
-            <p className="tittle-weight">{`Peso: ${selectedPedido.weight}`}</p>
-            <p className="tittle-unit"> {`Unidad: ${selectedPedido.unit}`}</p>
+            <p className="tittle-cargo"> Contenido del cargamento: {selectedPedido.productName.join(", ")}</p>
+            <p className="tittle-cargo"> Peso: {selectedPedido.weight.join(", ")}</p>
+            <p className="tittle-cargo"> Unidad: {selectedPedido.unit.join(", ")}</p>
 
             <button className="btn-modal" onClick={closeModal}>
               Cerrar
