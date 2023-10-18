@@ -98,7 +98,7 @@ const RegisterAlly = () => {
         return false;
       }
     }catch(error){
-      newAlert("Error inesperado", "Intente más tarde")
+      newAlert("Error Correo", "Por favor cambie a otro correo")
       return false;
     }
   }

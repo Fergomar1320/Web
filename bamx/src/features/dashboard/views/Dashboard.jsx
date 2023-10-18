@@ -3,7 +3,6 @@ import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { db } from "../../../config/FirebaseConnection";
 
 //ALERT
-import Modal from 'react-modal'
 import DefaultAlert from "../../Global/components/DefaultAlert";
 
 import {
@@ -24,10 +23,9 @@ import app from "../../../config/FirebaseConnection";
 
 const auth = getAuth(app);
 
-
-
 const Dashboard = () => {
   const [pedidos, setPedidos] = useState([]);
+  const [firstContacts, setFirstContacts] = useState([]);
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState(null); // Estado de filtrado
   const [showAlert, setShowAlert] = useState(false);
@@ -35,6 +33,7 @@ const Dashboard = () => {
   const [alertTitle, setAlertTitle] = useState('');
   const [selectedPedido, setSelectedPedido] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isFilterActive, setIsFilterActive] = useState(false);
   
   function closeAlert(){
     setShowAlert(false);
@@ -93,7 +92,28 @@ const Dashboard = () => {
       }
     };
     getPedidos();
+
+
+    const getFirstContacts = async () => {
+      try {
+        const userQuerySnapshot = collection(db, "firstContact");
+        const docs = [];
+        const unsubscribe = onSnapshot(userQuerySnapshot, (snapshot) => {
+          snapshot.forEach((doc) => {
+            docs.push(doc.data());
+          });
+          setFirstContacts(docs);
+        });
+        return unsubscribe;
+      } catch (error) {
+        console.log("Error: ", error);
+      }
+    };
+    getFirstContacts();
   }, [filter]);
+
+  
+
 
   const filteredPedidos = pedidos.filter((pedido) =>
     pedido.id.toLowerCase().includes(search.toLowerCase())
@@ -103,7 +123,7 @@ const Dashboard = () => {
     ? filteredPedidos.filter((pedido) => pedido.status === filter)
     : filteredPedidos;
 
-  const firstElevenPedidos = filteredPedidosByStatus.slice(0, 11);
+  const firstElevenPedidos = filteredPedidosByStatus.slice(0, 13);
 
   const toggleFilter = (selectedFilter) => {
     if (filter === selectedFilter && isFilterActive) {
@@ -123,6 +143,8 @@ const Dashboard = () => {
   const closeModal = () => {
     setIsModalOpen(false);
   };
+  const pedidosNotChecked = pedidos.filter((pedido) => pedido.notificationChecked === false);
+  const firstContactsNotChecked = firstContacts.filter((contact) => contact.notificationChecked === false);
 
   return (
     <section className="container">
@@ -228,7 +250,7 @@ const Dashboard = () => {
         </table>
       </section>
       <section className="side-bar">
-        <Sidebar></Sidebar>
+        <Sidebar notifications={pedidosNotChecked} firstContacts={firstContactsNotChecked}></Sidebar>
       </section>
       <Modal
         isOpen={isModalOpen}
