@@ -25,6 +25,7 @@
     color: black;
     margin-bottom: 32px;
     font-family: 'Poppins';
+    font-weight: 400;
 }
 
 .closeAlert{
@@ -36,5 +37,6 @@
     align-items: 'center';
     justify-content: 'center';
     font-family: 'Poppins';
+    font-weight: 400;
     cursor: pointer;
 }

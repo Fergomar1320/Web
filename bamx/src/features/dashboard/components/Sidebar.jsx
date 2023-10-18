@@ -16,7 +16,7 @@ const Sidebar = ({ notifications }) => {
         <div style={{ borderRadius: 50 }}>
           <img
             src="https://firebasestorage.googleapis.com/v0/b/bamx-cc64f.appspot.com/o/Web%2Fmahdi.jpg?alt=media&token=3086b1d2-3025-45b1-b568-0611820a77d6&_gl=1*1fki8bz*_ga*MjQ1OTk0NTYzLjE2OTIxOTcxOTI.*_ga_CW55HF8NVT*MTY5NzUxMDQyMy4xNTkuMS4xNjk3NTEwNzM1LjU3LjAuMA.."
-            alt="Profile Picture"
+            alt="Profile"
             style={{ width: 106, borderRadius: "50%" }}
           />
         </div>
@@ -55,6 +55,7 @@ const Sidebar = ({ notifications }) => {
             fontFamily: "Poppins",
             fontSize: 24,
             fontWeight: "regular",
+            cursor: 'pointer',
           }}
         >
           Salir

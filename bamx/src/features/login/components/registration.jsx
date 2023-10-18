@@ -33,9 +33,9 @@ const Registration = () => {
             navigate("/dashboard");
           })
           .catch((error) => {
-            const errorCode = error.code;
-            const errorMessage = error.message;
-            console.log(errorCode, errorMessage);
+            setAlertTitle("Error");
+            setAlertContent(error.message);
+            setShowAlert(true);
           });
       }
       else{

@@ -6,6 +6,11 @@ import Form from "react-bootstrap/Form";
 import InputGroup from "react-bootstrap/InputGroup";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { db } from "../../../config/FirebaseConnection";
+
+//ALERT
+import Modal from 'react-modal'
+import DefaultAlert from "../../Global/components/DefaultAlert";
+
 import {
   collection,
   onSnapshot,
@@ -15,16 +20,30 @@ import {
 
 const auth = getAuth(app);
 
+
+
 const Dashboard = () => {
   const [pedidos, setPedidos] = useState([]);
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState(null); // Estado de filtrado
+  const [showAlert, setShowAlert] = useState(false);
+  const [alertContent, setAlertContent] = useState('');
+  const [alertTitle, setAlertTitle] = useState('');
+
+  function closeAlert(){
+    setShowAlert(false);
+  }
+
+  function newAlert(title, content){
+    setAlertTitle(title);
+    setAlertContent(content);
+    setShowAlert(true);
+}
 
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
       if (user) {
         // User is signed in
-        const uid = user.uid;
       } else {
         // User is signed out
       }
@@ -58,7 +77,7 @@ const Dashboard = () => {
         });
         return unsubscribe;
       } catch (error) {
-        console.log("Error: ", error);
+        newAlert("Error inesperado", "Intente más tarde")
       }
     };
     getPedidos();
@@ -77,6 +96,29 @@ const Dashboard = () => {
 
   return (
     <section className="container">
+      <Modal isOpen={showAlert} onRequestClose={closeAlert} ariaHideApp={false} style={{
+          overlay: {
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundColor: 'rgba(255, 255, 255, 0.75)'
+          },
+          content: {
+            position: '',
+            margin: '12.5% 25%',
+            border: '0',
+            background: 'rgba(255, 255, 255, 0)',
+            WebkitOverflowScrolling: 'touch',
+            borderRadius: '4px',
+            outline: 'none',
+            padding: '20px',
+            overflow: 'hidden'
+          }
+  }}>
+      <DefaultAlert alertTitle={alertTitle} alertContent={alertContent} closeAlert={closeAlert}></DefaultAlert>
+      </Modal>
       <section className="main">
         <section className="header">
           <section className="header-top">

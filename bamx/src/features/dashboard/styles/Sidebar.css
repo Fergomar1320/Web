@@ -18,7 +18,7 @@ body{
 }
 
 .register-ally{
-    background-color: gray;
+    background-color: #E8042C;
     padding: 16px;
     cursor: pointer;
     color: white;
@@ -28,11 +28,5 @@ body{
 }
 
 .register-ally:hover{
-    background-color: rgb(141, 141, 141);
-    padding: 16px;
-    cursor: pointer;
-    color: white;
-    margin-top: 24px;
-    border-radius: 24px;
-    border-width: 0;
+    background-color: rgb(144, 0, 0);
 }

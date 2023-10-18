@@ -75,3 +75,66 @@
 .inputStyle:focus{
     border-bottom-width: 4px;
 }
+
+.confirmBackground{
+    background-color: #EFEFEF;
+    display: flex;
+    flex-direction: column;
+    padding: 32px;
+    align-items: center;
+    text-align: center;
+    margin-bottom: 16px;
+    border-radius: 20px;
+}
+
+.confirmTitle{
+    color: black;
+    margin-bottom: 32px;
+    font-family: 'Poppins';
+}
+
+.confirmContent{
+    color: black;
+    margin-bottom: 32px;
+    font-family: 'Poppins';
+    font-weight: 400;
+}
+
+.closeAlert{
+    border: 0;
+    border-radius: 25px;
+    padding: 16px 64px;
+    align-items: 'center';
+    justify-content: 'center';
+    font-family: 'Poppins';
+    font-weight: 400;
+    cursor: pointer;
+}
+
+.confirmButton{
+    background-color: #38B503;
+    color: #EFEFEF;
+    border: 0;
+    border-radius: 25px;
+    padding: 16px 64px;
+    align-items: 'center';
+    justify-content: 'center';
+    font-family: 'Poppins';
+    font-weight: 400;
+    cursor: pointer;
+    margin-left: 20px;
+}
+
+.cancelButton{
+    background-color: #E8042C;
+    color: #EFEFEF;
+    border: 0;
+    border-radius: 25px;
+    padding: 16px 64px;
+    align-items: 'center';
+    justify-content: 'center';
+    font-family: 'Poppins';
+    font-weight: 400;
+    cursor: pointer;
+    margin-right: 20px;
+}
