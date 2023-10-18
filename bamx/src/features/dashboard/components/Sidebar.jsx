@@ -2,7 +2,7 @@ import React, {useEffect, useState} from "react";
 import { useNavigate } from "react-router-dom";
 import "../styles/Sidebar.css";
 import { auth, db } from "../../../config/FirebaseConnection";
-import { doc, updateDoc } from "firebase/firestore";
+import { doc, updateDoc, where } from "firebase/firestore";
 import Modal from "react-modal";
 
 const Sidebar = ({ notifications, firstContacts }) => {
@@ -46,21 +46,22 @@ const Sidebar = ({ notifications, firstContacts }) => {
         notificationChecked: true,
       })
       .then (() => {
+        const newNotifications = joinedNotificationsAndContacts.filter((x) => x.id !== targetId);
+        setjoinedNotificationsAndContacts([...newNotifications]);
         closeModal();
       })
     }else{
       const docRef = doc(db, "firstContact", targetId);
   
       await updateDoc(docRef, {
-        status: targetStatus,
         notificationChecked: true,
       })
       .then (() => {
+        const newNotifications = joinedNotificationsAndContacts.filter((x) => x.docId !== targetId);
+        setjoinedNotificationsAndContacts(newNotifications);
         closeModal();
       })
     }
-    const newNotifications = joinedNotificationsAndContacts.filter((x) => x.id !== targetId);
-    setjoinedNotificationsAndContacts([...newNotifications]);
   };
 
   return (
@@ -117,11 +118,12 @@ const Sidebar = ({ notifications, firstContacts }) => {
             </div>
           </div>
           <h2 style={{ paddingTop: 16, margin: 0, paddingBlock: 8 }}>Notificaciones</h2>
-          <div style={{ overflow: "scroll", height: 360 }}>
+          <div style={{ height: 360, overflowY: "scroll"}}>
             {
             joinedNotificationsAndContacts.map((notification) => {
               return (
                 <div
+                  key={notification.id}
                   style={{
                     backgroundColor: "#fff",
                     padding: 8,
@@ -223,7 +225,7 @@ const Sidebar = ({ notifications, firstContacts }) => {
               Cerrar
             </button>
             <button className="btn-modal" onClick={() => updateStatus("En camino", selectedPedido.id, selectedPedido.uid)}>Confirmar</button>
-            <button className="btn-modal">Rechazar</button>
+            <button className="btn-modal" onClick={() => updateStatus("Cancelado", selectedPedido.id, selectedPedido.uid)}>Rechazar</button>
             
           </div>) : 
           <div>
@@ -234,7 +236,7 @@ const Sidebar = ({ notifications, firstContacts }) => {
             <p className="tittle-phone"> Número: {selectedContact.phone}</p>
             <p className="tittle-cargo"> Email: {selectedContact.email}</p>
 
-            <button className="btn-modal" onClick={closeModal}>
+            <button className="btn-modal" onClick={() => updateStatus(null, selectedContact.docId)}>
               Cerrar
             </button>
           </div>}

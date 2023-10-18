@@ -50,7 +50,6 @@ const Dashboard = () => {
     onAuthStateChanged(auth, (user) => {
       if (user) {
         const uid = user.uid;
-        console.log(uid);
       } else {
         // User is signed out
       }
@@ -101,13 +100,13 @@ const Dashboard = () => {
         const docs = [];
         const unsubscribe = onSnapshot(userQuerySnapshot, (snapshot) => {
           snapshot.forEach((doc) => {
-            docs.push(doc.data());
+            docs.push({...doc.data(), docId: doc.id});
           });
           setFirstContacts(docs);
         });
         return unsubscribe;
       } catch (error) {
-        console.log("Error: ", error);
+        newAlert("Error inesperado", "Intente más tarde");
       }
     };
     getFirstContacts();

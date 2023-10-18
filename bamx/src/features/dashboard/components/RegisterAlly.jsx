@@ -4,7 +4,7 @@ import React, { useState } from "react";
 // Firebase
 import { db, auth } from "../../../config/FirebaseConnection";
 import {createUserWithEmailAndPassword} from 'firebase/auth';
-import { collection, addDoc } from "firebase/firestore";
+import { doc , setDoc } from "firebase/firestore";
 import Modal from 'react-modal'
 
 //ALERT
@@ -21,7 +21,7 @@ const crossFetch = require('cross-fetch');
 
 const mailslurp = new MailSlurp({
   fetchApi: crossFetch,
-  apiKey: "dc2e43a4f5f1ca12f5fb1ac438e739575f650a708ed381f789cd3af88aa0f3e0",
+  apiKey: "d71723d9c0d4e4a393450de93e0c5903caf4fc9eecf73d8c564da060732f6c01",
 });
 
 
@@ -74,11 +74,19 @@ const RegisterAlly = () => {
   
   const addUser = async (user) => {
     try{
-      await addDoc(collection(db, "userData"), user);
+      await setDoc(doc(db, "userData", auth.currentUser.uid), user);
     } catch (error) {
       newAlert("Error inesperado", "Intente más tarde")
     }
   };
+
+  const addRanking = async (ranking) => {
+    try {
+      await setDoc(doc(db, "Leaderboard", auth.currentUser.uid), ranking);
+    } catch (error) {
+      newAlert("Error inesperado Leaderboard", "Intente más tarde");
+    }
+  }
 
 
   const sendMail = async (newPassword)  => {
@@ -92,7 +100,7 @@ const RegisterAlly = () => {
       };
       const sent = await mailslurp.sendEmail(inbox.id, options);
       if (sent) {
-        newAlert("Listo!", "Se ha enviado un correo con la contraseña")
+        newAlert("¡Listo!", "Se ha enviado un correo con la contraseña")
       } else {
         newAlert("Error Correo", "Por favor cambie a otro correo")
         return false;
@@ -146,21 +154,47 @@ const RegisterAlly = () => {
         const allyPass = await generatePassword()
         await createUserWithEmailAndPassword(auth, allyEmail, allyPass)
         .then(() => {
-          const user = {
-            name : allyName,
-            address : allyAddress,
-            nameCorp : allyCompany,
-            phoneNumber: allyPhone,
-            role: 'Ally',
-            status: Boolean(true)
-          };
-          addUser(user);
-          sendMail(allyPass)
+          if(!allyType){ //empresa
+            const user = {
+              name : allyName,
+              address : allyAddress,
+              nameCorp : allyCompany,
+              phoneNumber: allyPhone,
+              role: 'Ally',
+              status: Boolean(true)
+            };
+
+            const allyRanking = {
+              Canned : 0,
+              Clothing : 0,
+              Dairy : 0,
+              Fruit : 0,
+              Grains : 0,
+              Hygiene : 0,
+              Meat : 0,
+              Medicine : 0,
+              Others : 0,
+              Vegetable: 0
+            };
+            addRanking(allyRanking);
+            addUser(user);
+            sendMail(allyPass)
+          }
+          else{
+            const user = {
+              name : allyName,
+              phoneNumber: allyPhone,
+              role: 'Personal',
+              status: Boolean(true)
+            };
+            addUser(user);
+            sendMail(allyPass)
+          }
         }).catch(() => {
-          newAlert("Error inesperado", "Intente más tarde")
+          newAlert("Error inesperado al crear un usuario", "Intente más tarde")
         });
     } catch (error) {
-      newAlert("Error inesperado", "Intente más tarde")
+      newAlert("Error inesperado ", "Intente más tarde")
     }
   }
 
@@ -200,7 +234,7 @@ const RegisterAlly = () => {
               padding: '20px',
               overflow: 'hidden'
             }}}>
-            <DefaultAlert alertTitle={alertTitle} alertContent={alertContent} closeAlert={closeAlert}></DefaultAlert>
+            <DefaultAlert alertTitle={alertTitle} alertContent={alertContent} closeAlert={ () => {alertTitle === "¡Listo!" ? navigate("/dashboard") : closeAlert()}}></DefaultAlert>
           </Modal>
 
           <Modal isOpen={showConfirm} onRequestClose={closeConfirm} ariaHideApp={false} style={{
