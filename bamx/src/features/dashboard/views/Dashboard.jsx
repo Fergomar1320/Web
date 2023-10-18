@@ -260,7 +260,9 @@ const Dashboard = () => {
             <h2>Detalles del Pedido: {selectedPedido.id}</h2>
             <p className="tittle-name"> Nombre del cliente: {selectedPedido.name}</p>
             <p className="tittle-phone"> Contacto: {selectedPedido.phone}</p>
-            <p className="tittle-cargo"> Contenido del cargamento: </p>
+            <p className="tittle-cargo"> {`Contenido del cargamento: ${selectedPedido.productName}`} </p>
+            <p className="tittle-weight">{`Peso: ${selectedPedido.weight}`}</p>
+            <p className="tittle-unit"> {`Unidad: ${selectedPedido.unit}`}</p>
 
             <button className="btn-modal" onClick={closeModal}>
               Cerrar
