@@ -1,9 +1,4 @@
 import React, { useEffect, useState } from "react";
-import "../styles/Dashboard.css";
-import Sidebar from "../components/Sidebar";
-import app from "../../../config/FirebaseConnection";
-import Form from "react-bootstrap/Form";
-import InputGroup from "react-bootstrap/InputGroup";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { db } from "../../../config/FirebaseConnection";
 
@@ -18,6 +13,15 @@ import {
   limit,
 } from "firebase/firestore";
 
+import Form from "react-bootstrap/Form";
+import InputGroup from "react-bootstrap/InputGroup";
+import Modal from "react-modal";
+
+import "../styles/Dashboard.css";
+import "../styles/Modal.css";
+import Sidebar from "../components/Sidebar";
+import app from "../../../config/FirebaseConnection";
+
 const auth = getAuth(app);
 
 
@@ -29,7 +33,9 @@ const Dashboard = () => {
   const [showAlert, setShowAlert] = useState(false);
   const [alertContent, setAlertContent] = useState('');
   const [alertTitle, setAlertTitle] = useState('');
-
+  const [selectedPedido, setSelectedPedido] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  
   function closeAlert(){
     setShowAlert(false);
   }
@@ -39,12 +45,11 @@ const Dashboard = () => {
     setAlertContent(content);
     setShowAlert(true);
 }
-  const [isFilterActive, setIsFilterActive] = useState(false); // Estado de alternancia
+
 
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
       if (user) {
-        // User is signed in
         const uid = user.uid;
         console.log(uid);
       } else {
@@ -73,6 +78,8 @@ const Dashboard = () => {
                     ...change.doc.data(),
                     id: change.doc.id,
                     nameCorp: doc.data()["nameCorp"],
+                    name: doc.data()["name"],
+                    phone: doc.data()["phoneNumber"],
                   });
                 }
               });
@@ -92,12 +99,30 @@ const Dashboard = () => {
     pedido.id.toLowerCase().includes(search.toLowerCase())
   );
 
-  // Aplicar el filtro si está activo
   const filteredPedidosByStatus = isFilterActive
     ? filteredPedidos.filter((pedido) => pedido.status === filter)
     : filteredPedidos;
 
   const firstElevenPedidos = filteredPedidosByStatus.slice(0, 11);
+
+  const toggleFilter = (selectedFilter) => {
+    if (filter === selectedFilter && isFilterActive) {
+      setFilter(null);
+      setIsFilterActive(false);
+    } else {
+      setFilter(selectedFilter);
+      setIsFilterActive(true);
+    }
+  };
+
+  const openModal = (pedido) => {
+    setSelectedPedido(pedido);
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
 
   return (
     <section className="container">
@@ -159,7 +184,7 @@ const Dashboard = () => {
                   className={`btn2 ${filter === "Pendiente" ? "active" : ""}`}
                   onClick={() => toggleFilter("Pendiente")}
                 >
-                  Pendientes
+                  Pendiente
                 </button>
                 <button
                   className={`btn3 ${filter === "Cancelado" ? "active" : ""}`}
@@ -188,7 +213,11 @@ const Dashboard = () => {
           </thead>
           <tbody>
             {firstElevenPedidos.map((pedido) => (
-              <tr className="data" key={pedido.id}>
+              <tr
+                className="data"
+                key={pedido.id}
+                onClick={() => openModal(pedido)}
+              >
                 <td style={{ textAlign: "center" }}>{`${pedido.id}`}</td>
                 <td style={{ textAlign: "center" }}>{pedido.nameCorp}</td>
                 <td style={{ textAlign: "center" }}>{pedido.status}</td>
@@ -201,20 +230,46 @@ const Dashboard = () => {
       <section className="side-bar">
         <Sidebar></Sidebar>
       </section>
+      <Modal
+        isOpen={isModalOpen}
+        onRequestClose={closeModal}
+        style={{
+          overlay: {
+            position: "fixed",
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundColor: "rgba(0, 0, 0, 0.75)",
+          },
+          content: {
+            position: "",
+            margin: "12.5% 25%",
+            border: "0",
+            background: "rgba(255, 255, 255)",
+            WebkitOverflowScrolling: "touch",
+            borderRadius: "4px",
+            outline: "none",
+            padding: "20px",
+            overflow: "hidden",
+          },
+        }}
+      >
+        {selectedPedido && (
+          <div>
+            <h2>Detalles del Pedido: {selectedPedido.id}</h2>
+            <p className="tittle-name"> Nombre del cliente: {selectedPedido.name}</p>
+            <p className="tittle-phone"> Contacto: {selectedPedido.phone}</p>
+            <p className="tittle-cargo"> Contenido del cargamento: </p>
+
+            <button className="btn-modal" onClick={closeModal}>
+              Cerrar
+            </button>
+          </div>
+        )}
+      </Modal>
     </section>
   );
-
-  function toggleFilter(selectedFilter) {
-    if (filter === selectedFilter && isFilterActive) {
-      // Si el filtro seleccionado ya está activo, desactívalo
-      setFilter(null);
-      setIsFilterActive(false);
-    } else {
-      // Si se selecciona un filtro nuevo, actívalo
-      setFilter(selectedFilter);
-      setIsFilterActive(true);
-    }
-  }
 };
 
 export default Dashboard;
