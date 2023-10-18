@@ -79,6 +79,7 @@ const Dashboard = () => {
                     nameCorp: doc.data()["nameCorp"],
                     name: doc.data()["name"],
                     phone: doc.data()["phoneNumber"],
+                    uid: doc.id,
                   });
                 }
               });

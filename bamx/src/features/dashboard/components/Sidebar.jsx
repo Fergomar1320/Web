@@ -1,7 +1,8 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import { useNavigate } from "react-router-dom";
 import "../styles/Sidebar.css";
-import { auth } from "../../../config/FirebaseConnection";
+import { auth, db } from "../../../config/FirebaseConnection";
+import { doc, updateDoc } from "firebase/firestore";
 import Modal from "react-modal";
 
 const Sidebar = ({ notifications, firstContacts }) => {
@@ -10,9 +11,15 @@ const Sidebar = ({ notifications, firstContacts }) => {
   const [selectedContact, setSelectedContact] = useState(null);
   const [selectedDisplay, setSelectedDisplay] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  
 
 
-  const joinedNotificationsAndContacts = notifications.concat(firstContacts);
+  const [joinedNotificationsAndContacts, setjoinedNotificationsAndContacts] = useState([]);
+
+  useEffect(() => {
+    const data = notifications.concat(firstContacts);
+    setjoinedNotificationsAndContacts(data);
+  }, [notifications, firstContacts]);
   
   const openModal = (pedido) => {
     if(pedido.productName){
@@ -28,6 +35,32 @@ const Sidebar = ({ notifications, firstContacts }) => {
 
   const closeModal = () => {
     setIsModalOpen(false);
+  };
+
+  const updateStatus = async (targetStatus, targetId, userId) => {
+    if (userId){
+      const docRef = doc(db, "userData", userId, "requestsHistory", targetId);
+  
+      await updateDoc(docRef, {
+        status: targetStatus,
+        notificationChecked: true,
+      })
+      .then (() => {
+        closeModal();
+      })
+    }else{
+      const docRef = doc(db, "firstContact", targetId);
+  
+      await updateDoc(docRef, {
+        status: targetStatus,
+        notificationChecked: true,
+      })
+      .then (() => {
+        closeModal();
+      })
+    }
+    const newNotifications = joinedNotificationsAndContacts.filter((x) => x.id !== targetId);
+    setjoinedNotificationsAndContacts([...newNotifications]);
   };
 
   return (
@@ -85,7 +118,8 @@ const Sidebar = ({ notifications, firstContacts }) => {
           </div>
           <h2 style={{ paddingTop: 16, margin: 0, paddingBlock: 8 }}>Notificaciones</h2>
           <div style={{ overflow: "scroll", height: 360 }}>
-            {joinedNotificationsAndContacts.map((notification) => {
+            {
+            joinedNotificationsAndContacts.map((notification) => {
               return (
                 <div
                   style={{
@@ -188,6 +222,9 @@ const Sidebar = ({ notifications, firstContacts }) => {
             <button className="btn-modal" onClick={closeModal}>
               Cerrar
             </button>
+            <button className="btn-modal" onClick={() => updateStatus("En camino", selectedPedido.id, selectedPedido.uid)}>Confirmar</button>
+            <button className="btn-modal">Rechazar</button>
+            
           </div>) : 
           <div>
             <h2>Detalles del Contacto:</h2>
