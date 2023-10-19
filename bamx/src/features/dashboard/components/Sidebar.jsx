@@ -69,7 +69,7 @@ const Sidebar = ({ notifications, firstContacts }) => {
       <div>
         <div style={{ borderRadius: 50 }}>
           <img
-            src="https://firebasestorage.googleapis.com/v0/b/bamx-cc64f.appspot.com/o/Web%2Fmahdi.jpg?alt=media&token=3086b1d2-3025-45b1-b568-0611820a77d6&_gl=1*1fki8bz*_ga*MjQ1OTk0NTYzLjE2OTIxOTcxOTI.*_ga_CW55HF8NVT*MTY5NzUxMDQyMy4xNTkuMS4xNjk3NTEwNzM1LjU3LjAuMA.."
+            src="https://i.natgeofe.com/n/548467d8-c5f1-4551-9f58-6817a8d2c45e/NationalGeographic_2572187_square.jpg"
             alt="Profile"
             style={{ width: 106, borderRadius: "50%" }}
           />
@@ -169,16 +169,7 @@ const Sidebar = ({ notifications, firstContacts }) => {
             auth.signOut();
             navigate("/");
           }}
-          className="btn btn-danger"
-          style={{
-            marginBlock: 40,
-            backgroundColor: "transparent",
-            borderWidth: 0,
-            fontFamily: "Poppins",
-            fontSize: 24,
-            fontWeight: "regular",
-            cursor: 'pointer',
-          }}
+          className="register-exit"
         >
           Salir
         </button>

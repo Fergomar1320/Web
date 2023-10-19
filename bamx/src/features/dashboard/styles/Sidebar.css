@@ -27,5 +27,21 @@ body{
     border-width: 0;
 }
 
+.register-exit{
+    background-color: #E8042C;
+    padding: 16px 48px;
+    font-weight: 400;
+    font-size: medium;
+    cursor: pointer;
+    color: white;
+    margin-top: 24px;
+    border-radius: 24px;
+    border-width: 0;
+}
+
 .register-ally:hover{
     background-color: #f5721a;}
+
+.register-exit:hover{
+    background-color: #f5721a;
+}
