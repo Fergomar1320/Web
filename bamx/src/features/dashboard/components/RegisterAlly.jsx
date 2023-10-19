@@ -96,7 +96,7 @@ const RegisterAlly = () => {
       const options = {
         to: [allyEmail],
         subject: 'Bienvenid@ a BAMX, ' +allyName,
-        body: 'Tu contraseña para acceder a BAMX: ' + newPassword,
+        body: 'Tu contraseña para acceder a BAMX: ' + newPassword + '\n\n Se recomienda actualizar su contraseña usando la sección de "¿Olvidaste tu contraseña?" en la app.\n\n -El Banco de Alimentos',
       };
       const sent = await mailslurp.sendEmail(inbox.id, options);
       if (sent) {
