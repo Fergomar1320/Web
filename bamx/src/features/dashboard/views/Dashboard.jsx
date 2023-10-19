@@ -10,7 +10,11 @@ import {
   onSnapshot,
   query,
   limit,
+  doc,
+  updateDoc
 } from "firebase/firestore";
+
+
 
 import Form from "react-bootstrap/Form";
 import InputGroup from "react-bootstrap/InputGroup";
@@ -36,6 +40,7 @@ const Dashboard = () => {
   const [alertTitle, setAlertTitle] = useState('');
   const [selectedPedido, setSelectedPedido] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isModalOpen2, setIsModalOpen2] = useState(false);
   const [isFilterActive, setIsFilterActive] = useState(false);
   
   function closeAlert(){
@@ -138,13 +143,35 @@ const Dashboard = () => {
   };
 
   const openModal = (pedido) => {
-    setSelectedPedido(pedido);
-    setIsModalOpen(true);
+    if(pedido.status === "En camino"){
+      setSelectedPedido(pedido);
+      setIsModalOpen2(true);
+    }else{
+      setSelectedPedido(pedido);
+      setIsModalOpen(true);
+    }
   };
 
   const closeModal = () => {
     setIsModalOpen(false);
   };
+
+  const closeModal2 = () => {
+    setIsModalOpen2(false);
+  };
+
+  const updateStatus = async (targetStatus, targetId, userId) => {
+    if (userId){
+      const docRef = doc(db, "userData", userId, "requestsHistory", targetId);
+  
+      await updateDoc(docRef, {
+        status: targetStatus})
+      .then (() => {
+        closeModal2();
+      })
+    }
+  };
+
   const pedidosNotChecked = pedidos.filter((pedido) => pedido.notificationChecked === false);
   const firstContactsNotChecked = firstContacts.filter((contact) => contact.notificationChecked === false);
 
@@ -292,6 +319,51 @@ const Dashboard = () => {
 
             <button className="btn-modal" onClick={closeModal}>
               Cerrar
+            </button>
+          </div>
+        )}
+      </Modal>
+      <Modal
+        isOpen={isModalOpen2}
+        onRequestClose={closeModal2}
+        style={{
+          overlay: {
+            position: "fixed",
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundColor: "rgba(0, 0, 0, 0.75)",
+          },
+          content: {
+            position: "",
+            margin: "12.5% 25%",
+            background: "rgba(255, 255, 255)",
+            WebkitOverflowScrolling: "touch",
+            borderRadius: "20px",
+            outline: "none",
+            padding: "20px",
+            overflow: "hidden",
+          },
+        }}
+      >
+        {selectedPedido && (
+          <div>
+            <h2>Detalles del Pedido: {selectedPedido.id}</h2>
+            <p className="tittle-name">
+              {" "}
+              Nombre del cliente: {selectedPedido.name}
+            </p>
+            <p className="tittle-phone"> Contacto: {selectedPedido.phone}</p>
+            <p className="tittle-cargo"> Contenido del cargamento: {selectedPedido.productName.join(", ")}</p>
+            <p className="tittle-cargo"> Peso: {selectedPedido.weight.join(", ")}</p>
+            <p className="tittle-cargo"> Unidad: {selectedPedido.unit.join(", ")}</p>
+
+            <button className="btn-modal" onClick={closeModal2}>
+              Cerrar
+            </button>
+            <button className="btn-modal" onClick={() => {updateStatus("Entregado", selectedPedido.id, selectedPedido.uid)}}>
+              Recibir
             </button>
           </div>
         )}
