@@ -2,7 +2,7 @@ import React, {useEffect, useState} from "react";
 import { useNavigate } from "react-router-dom";
 import "../styles/Sidebar.css";
 import { auth, db } from "../../../config/FirebaseConnection";
-import { doc, updateDoc, where } from "firebase/firestore";
+import { doc, updateDoc } from "firebase/firestore";
 import Modal from "react-modal";
 
 const Sidebar = ({ notifications, firstContacts }) => {
@@ -133,8 +133,8 @@ const Sidebar = ({ notifications, firstContacts }) => {
                   }}
                 >
                   {notification.productName ? (
-                    <div style={{}} onClick={() => openModal(notification)}>
-                      <h3>Nueva Solicitud</h3>
+                    <div style={{cursor: "pointer"}} onClick={() => openModal(notification)}>
+                      <h3>Nuevo Cargamento</h3>
                       <p
                         style={{
                           textAlign: "center",
@@ -142,11 +142,11 @@ const Sidebar = ({ notifications, firstContacts }) => {
                           marginBlock: 4,
                         }}
                       >
-                        Se ha creado una nueva solicitud
+                        Click para ver detalles
                       </p>
                     </div>
                   ) : (
-                    <div style={{}} onClick={() => openModal(notification)}>
+                    <div style={{cursor: "pointer"}} onClick={() => openModal(notification)}>
                       <h3>Nuevo Contacto</h3>
                       <p
                         style={{
@@ -167,7 +167,6 @@ const Sidebar = ({ notifications, firstContacts }) => {
         <button
           onClick={() => {
             auth.signOut();
-            navigate("/");
           }}
           className="register-exit"
         >

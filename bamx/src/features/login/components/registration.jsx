@@ -2,12 +2,14 @@ import React, { useState } from "react";
 import styles from "../styles/style.module.css";
 
 import app from "../../../config/FirebaseConnection";
+import { db } from "../../../config/FirebaseConnection";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 import Modal from 'react-modal'
 
 //ALERT
 import DefaultAlert from "../../Global/components/DefaultAlert";
+import { getDoc, doc } from "firebase/firestore";
 
 const auth = getAuth(app);
 
@@ -24,14 +26,23 @@ const Registration = () => {
     setIsShown((isShown) => !isShown);
   }
 
+  const intruderFound = () => {
+    auth.signOut();
+    setAlertTitle("Usuario no autorizado");
+    setAlertContent("El usuario no tiene permisos para acceder a esta aplicación");
+    setShowAlert(true);
+  }
+
   const onLogin = (e) => {
     e.preventDefault();
     if(email.match("^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?")!=null){
       if(password.match("^(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$")!=null){
         signInWithEmailAndPassword(auth, email, password)
-          .then(() => {
-            navigate("/dashboard");
-          })
+          .then(async () => {
+              await getDoc(doc(db, "userData", auth.currentUser.uid)).then((doc) => {
+                doc.data().role === "Admin" ? navigate("/dashboard") : intruderFound();
+              })
+            })
           .catch((error) => {
             setAlertTitle("Error");
             setAlertContent(error.message);
@@ -46,7 +57,7 @@ const Registration = () => {
     }
     else{
       setAlertTitle("Correo inválido");
-      setAlertContent("El correo ingresado no es válido");
+      setAlertContent("El correo debe contener un @ y un dominio válido");
       setShowAlert(true);
     }
   };
@@ -92,7 +103,7 @@ const Registration = () => {
         <div className={styles.welcome}>
           <input
             className={styles.container}
-            placeholder="Username"
+            placeholder="Correo"
             type="text"
             id="username"
             onChange={(e) => {
@@ -105,7 +116,7 @@ const Registration = () => {
         <div className={styles.welcome}>
           <input
             className={styles.container}
-            placeholder="Password"
+            placeholder="Contraseña"
             type={isShown ? "text" : "password"}
             id="password"
             autoComplete="false"

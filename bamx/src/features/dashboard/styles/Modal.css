@@ -25,6 +25,7 @@ h2{
     padding-right: 1rem;
     background-color: rgba(232,4,44);
     color: white;
+    margin-right: 15px;
 }
 
 .btn-modal:hover{

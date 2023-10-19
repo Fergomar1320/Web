@@ -124,7 +124,7 @@ const RegisterAlly = () => {
     }
 
     if(!emailRegex.test(allyEmail)){
-      newAlert("Correo inválido", "El correo ingresado no es válido")
+      newAlert("Correo inválido", "El correo debe contener un @ y un dominio válido")
       return false;
     }
 
@@ -142,7 +142,7 @@ const RegisterAlly = () => {
     }
 
     if(!numRegex.test(allyPhone)){
-      newAlert("Número inválido", "Verifique su número")
+      newAlert("Número inválido", "El número debe contener 10 dígitos")
       return false;
     }
 
@@ -296,6 +296,7 @@ const RegisterAlly = () => {
                       type="text" 
                       name = "allyName" 
                       value={allyName} 
+                      maxLength={100}
                       onChange={(e) => setAllyName(e.target.value)}>
                     </input>
                 </label>
@@ -308,6 +309,7 @@ const RegisterAlly = () => {
                       type="text" 
                       name = "allyEmail" 
                       value={allyEmail}
+                      maxLength={100}
                       onChange={(e) => setAllyEmail(e.target.value)}>
                     </input>
                 </label>
@@ -321,6 +323,7 @@ const RegisterAlly = () => {
                           type="text" 
                           name = "allyCompany" 
                           value={allyCompany}
+                          maxLength={150}
                           onChange={(e) => setAllyCompany(e.target.value)}>
                         </input>
                     </label>
@@ -335,6 +338,7 @@ const RegisterAlly = () => {
                         type="text" 
                         name = "allyAddress" 
                         value={allyAddress}
+                        maxLength={200}
                         onChange={(e) => setAllyAddress(e.target.value)}>
                       </input>
                   </label>
@@ -348,6 +352,7 @@ const RegisterAlly = () => {
                       type="text" 
                       name = "allyPhone" 
                       value={allyPhone}
+                      maxLength={10}
                       onChange={(e) => setAllyPhone(e.target.value)}>
                     </input>
                 </label>

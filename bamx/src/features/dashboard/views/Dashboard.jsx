@@ -20,10 +20,13 @@ import "../styles/Dashboard.css";
 import "../styles/Modal.css";
 import Sidebar from "../components/Sidebar";
 import app from "../../../config/FirebaseConnection";
+import { useNavigate } from "react-router-dom";
 
 const auth = getAuth(app);
 
+
 const Dashboard = () => {
+  const navigate = useNavigate();
   const [pedidos, setPedidos] = useState([]);
   const [firstContacts, setFirstContacts] = useState([]);
   const [search, setSearch] = useState("");
@@ -49,12 +52,12 @@ const Dashboard = () => {
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
       if (user) {
-        const uid = user.uid;
+        return;
       } else {
-        // User is signed out
+        navigate("/");
       }
     });
-  }, []);
+  }, [navigate]);
 
   useEffect(() => {
     const getPedidos = async () => {
@@ -63,7 +66,6 @@ const Dashboard = () => {
         const docs = [];
         const unsubscribe = onSnapshot(userQuerySnapshot, (snapshot) => {
           snapshot.forEach((doc) => {
-            const estadoFiltrado = filter ? filter.toLowerCase() : filter;
 
             const requestsQuerySnapshot = query(
               collection(db, "userData", doc.id, "requestsHistory"),
