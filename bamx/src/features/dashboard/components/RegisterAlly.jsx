@@ -21,7 +21,7 @@ const crossFetch = require('cross-fetch');
 
 const mailslurp = new MailSlurp({
   fetchApi: crossFetch,
-  apiKey: "d71723d9c0d4e4a393450de93e0c5903caf4fc9eecf73d8c564da060732f6c01",
+  apiKey: "af7fef129553b83d5883cfc82c768aca3b985fdbfe5ca29d217d136e1974d405",
 });
 
 
